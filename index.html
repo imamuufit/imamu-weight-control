@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#111111">
+    <meta name="description" content="7日平均と2週間の傾向で見る、LINEリッチメニュー向け体重管理PWA。">
+    <title>imamu. Weight Log</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="assets/icon.svg">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="brand-kicker">imamu. private gym</p>
+          <h1>Weight Log</h1>
+        </div>
+        <button class="icon-button" type="button" id="installButton" hidden aria-label="ホーム画面に追加">
+          <span aria-hidden="true">＋</span>
+        </button>
+      </header>
+
+      <main>
+        <section class="hero-panel">
+          <div>
+            <p class="date-label" id="todayLabel"></p>
+            <h2>1日ではなく、7日平均で見る。</h2>
+            <p>水分や塩分で動く日々の数字より、2週間の傾向を優先して判断します。</p>
+          </div>
+          <div class="trend-badge" id="trendBadge">
+            <span>7日平均</span>
+            <strong id="heroAverage">--.-kg</strong>
+          </div>
+        </section>
+
+        <nav class="tabbar" aria-label="画面切り替え">
+          <button class="tab-button active" type="button" data-view="record">記録</button>
+          <button class="tab-button" type="button" data-view="dashboard">分析</button>
+          <button class="tab-button" type="button" data-view="weekly">週間</button>
+          <button class="tab-button" type="button" data-view="settings">設定</button>
+        </nav>
+
+        <section class="view active" id="view-record">
+          <form class="card form-card" id="entryForm">
+            <div class="section-heading">
+              <h2>今日の記録</h2>
+              <p>朝の同じ条件で測ると傾向が読みやすくなります。</p>
+            </div>
+
+            <label class="field">
+              <span>日付</span>
+              <input type="date" id="entryDate" required>
+            </label>
+
+            <label class="field">
+              <span>体重 kg</span>
+              <input type="number" id="entryWeight" min="20" max="250" step="0.1" inputmode="decimal" placeholder="例 68.4" required>
+            </label>
+
+            <label class="field">
+              <span>体調メモ</span>
+              <textarea id="entryMemo" rows="3" placeholder="睡眠、むくみ、筋肉痛、外食、トレーニングなど"></textarea>
+            </label>
+
+            <div class="segmented" role="radiogroup" aria-label="体調">
+              <label><input type="radio" name="condition" value="good"><span>良い</span></label>
+              <label><input type="radio" name="condition" value="normal" checked><span>普通</span></label>
+              <label><input type="radio" name="condition" value="tired"><span>重い</span></label>
+            </div>
+
+            <button class="primary-button" type="submit">記録する</button>
+          </form>
+
+          <section class="summary-grid">
+            <article class="metric-card">
+              <span>最新体重</span>
+              <strong id="latestWeight">--.-kg</strong>
+            </article>
+            <article class="metric-card">
+              <span>先週平均比</span>
+              <strong id="weeklyDiff">--.-kg</strong>
+            </article>
+          </section>
+
+          <section class="card">
+            <div class="section-heading compact">
+              <h2>直近の記録</h2>
+              <button class="text-button" type="button" id="copyLineButton">LINE報告をコピー</button>
+            </div>
+            <div class="entry-list" id="entryList"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-dashboard">
+          <section class="card chart-card">
+            <div class="section-heading compact">
+              <h2>体重グラフ</h2>
+              <p>実測、7日平均、目標ライン</p>
+            </div>
+            <canvas id="weightChart" width="720" height="420" aria-label="体重グラフ"></canvas>
+          </section>
+
+          <section class="summary-grid">
+            <article class="metric-card">
+              <span>7日平均</span>
+              <strong id="avg7">--.-kg</strong>
+            </article>
+            <article class="metric-card">
+              <span>14日傾向</span>
+              <strong id="trend14">--</strong>
+            </article>
+            <article class="metric-card">
+              <span>期限まで</span>
+              <strong id="daysLeft">--日</strong>
+            </article>
+            <article class="metric-card">
+              <span>目標差</span>
+              <strong id="goalGap">--.-kg</strong>
+            </article>
+          </section>
+
+          <section class="card">
+            <div class="section-heading">
+              <h2>摂取カロリーとPFC目安</h2>
+              <p>設定値からの概算です。体調と実測の推移を優先して調整します。</p>
+            </div>
+            <div class="nutrition-grid">
+              <div><span>推定消費</span><strong id="tdee">----</strong><small>kcal/日</small></div>
+              <div><span>目安摂取</span><strong id="targetCalories">----</strong><small>kcal/日</small></div>
+              <div><span>P</span><strong id="protein">--g</strong></div>
+              <div><span>F</span><strong id="fat">--g</strong></div>
+              <div><span>C</span><strong id="carbs">--g</strong></div>
+            </div>
+          </section>
+
+          <section class="card advice-card">
+            <div class="section-heading compact">
+              <h2>調整アドバイス</h2>
+            </div>
+            <p id="adviceText">まずは初期設定と7日分の記録を入れると、傾向に合わせた目安を表示します。</p>
+          </section>
+        </section>
+
+        <section class="view" id="view-weekly">
+          <form class="card form-card" id="weeklyForm">
+            <div class="section-heading">
+              <h2>週間チェック</h2>
+              <p>数字だけでなく、疲労や食事の守りやすさも確認します。</p>
+            </div>
+            <label class="field">
+              <span>週の開始日</span>
+              <input type="date" id="weekStart" required>
+            </label>
+            <label class="field">
+              <span>食事の達成度</span>
+              <input type="range" id="mealScore" min="1" max="5" value="3">
+            </label>
+            <label class="field">
+              <span>疲労感</span>
+              <input type="range" id="fatigueScore" min="1" max="5" value="3">
+            </label>
+            <label class="field">
+              <span>メモ</span>
+              <textarea id="weeklyMemo" rows="3" placeholder="良かったこと、詰まったこと、来週の調整"></textarea>
+            </label>
+            <button class="primary-button" type="submit">週間チェックを保存</button>
+          </form>
+
+          <section class="card">
+            <div class="section-heading compact">
+              <h2>チェック履歴</h2>
+            </div>
+            <div class="entry-list" id="weeklyList"></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-settings">
+          <form class="card form-card" id="settingsForm">
+            <div class="section-heading">
+              <h2>初期設定</h2>
+              <p>カロリー計算と目標ラインに使います。あとから変更できます。</p>
+            </div>
+
+            <div class="two-col">
+              <label class="field">
+                <span>身長 cm</span>
+                <input type="number" id="height" min="120" max="230" step="0.1" inputmode="decimal">
+              </label>
+              <label class="field">
+                <span>年齢</span>
+                <input type="number" id="age" min="12" max="100" inputmode="numeric">
+              </label>
+            </div>
+
+            <label class="field">
+              <span>性別</span>
+              <select id="sex">
+                <option value="female">女性</option>
+                <option value="male">男性</option>
+                <option value="other">指定しない</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>活動量</span>
+              <select id="activity">
+                <option value="1.2">低い デスクワーク中心</option>
+                <option value="1.375">やや低い 週1から3回運動</option>
+                <option value="1.55">普通 週3から5回運動</option>
+                <option value="1.725">高い 週5回以上運動</option>
+              </select>
+            </label>
+
+            <div class="two-col">
+              <label class="field">
+                <span>目標体重 kg</span>
+                <input type="number" id="goalWeight" min="20" max="250" step="0.1" inputmode="decimal">
+              </label>
+              <label class="field">
+                <span>目標期限</span>
+                <input type="date" id="goalDate">
+              </label>
+            </div>
+
+            <label class="field">
+              <span>目的</span>
+              <select id="goalType">
+                <option value="fatloss">減量</option>
+                <option value="maintain">維持</option>
+                <option value="leanbulk">筋トレしながら増量</option>
+                <option value="weightclass">階級調整</option>
+              </select>
+            </label>
+
+            <button class="primary-button" type="submit">設定を保存</button>
+          </form>
+
+          <section class="card">
+            <div class="section-heading">
+              <h2>データ管理</h2>
+              <p>端末内に保存されます。機種変更やブラウザ変更では引き継がれません。</p>
+            </div>
+            <div class="action-row">
+              <button class="secondary-button" type="button" id="exportCsvButton">CSVエクスポート</button>
+              <button class="danger-button" type="button" id="deleteDataButton">データ削除</button>
+            </div>
+          </section>
+
+          <section class="notice">
+            <strong>ご利用前の注意</strong>
+            <p>このアプリは体重管理の記録補助であり、医療診断や治療を目的としたものではありません。妊娠中、治療中、摂食障害の既往がある方、医師から食事制限を受けている方は、医師や専門家に相談してください。</p>
+          </section>
+        </section>
+      </main>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>

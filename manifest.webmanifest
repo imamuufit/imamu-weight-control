@@ -1,0 +1,20 @@
+{
+  "name": "imamu. Weight Log",
+  "short_name": "Weight Log",
+  "description": "7日平均と2週間の傾向で見る体重管理アプリ",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f4ef",
+  "theme_color": "#111111",
+  "orientation": "portrait",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

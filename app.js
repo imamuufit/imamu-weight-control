@@ -194,6 +194,7 @@ function renderAll() {
   renderMetrics();
   renderEntries();
   renderWeeklyChecks();
+  renderOnboarding();
   renderChart();
 }
 
@@ -262,6 +263,12 @@ function renderWeeklyChecks() {
       <button class="mini-button" type="button" data-delete-week="${check.weekStart}" aria-label="${check.weekStart}の週間チェックを削除">削除</button>
     </div>
   `).join("");
+}
+
+function renderOnboarding() {
+  const required = ["height", "age", "goalWeight", "goalDate"];
+  const isIncomplete = required.some((key) => !String(state.settings[key] || "").trim());
+  $("onboardingCard").hidden = !isIncomplete;
 }
 
 function renderChart() {
@@ -420,12 +427,13 @@ function exportCsv() {
 function setupEvents() {
   document.querySelectorAll(".tab-button").forEach((button) => {
     button.addEventListener("click", () => {
-      document.querySelectorAll(".tab-button").forEach((tab) => tab.classList.remove("active"));
-      document.querySelectorAll(".view").forEach((view) => view.classList.remove("active"));
-      button.classList.add("active");
-      $(`view-${button.dataset.view}`).classList.add("active");
-      if (button.dataset.view === "dashboard") renderChart();
+      activateView(button.dataset.view);
     });
+  });
+
+  $("openSettingsButton").addEventListener("click", () => {
+    activateView("settings");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
   $("entryForm").addEventListener("submit", (event) => {
@@ -526,6 +534,15 @@ function setupEvents() {
     deferredInstallPrompt = null;
     $("installButton").hidden = true;
   });
+}
+
+function activateView(viewName) {
+  document.querySelectorAll(".tab-button").forEach((tab) => {
+    tab.classList.toggle("active", tab.dataset.view === viewName);
+  });
+  document.querySelectorAll(".view").forEach((view) => view.classList.remove("active"));
+  $(`view-${viewName}`).classList.add("active");
+  if (viewName === "dashboard") renderChart();
 }
 
 async function registerServiceWorker() {

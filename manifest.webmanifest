@@ -1,6 +1,6 @@
 {
-  "name": "imamu. Weight Log",
-  "short_name": "Weight Log",
+  "name": "体重コントロールノート",
+  "short_name": "体重ノート",
   "description": "7日平均と2週間の傾向で見る体重管理アプリ",
   "start_url": "./index.html",
   "scope": "./",
@@ -11,7 +11,7 @@
   "lang": "ja",
   "icons": [
     {
-      "src": "assets/icon.svg",
+      "src": "icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"

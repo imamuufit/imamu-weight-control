@@ -290,7 +290,8 @@ button:focus-visible {
 .primary-button,
 .secondary-button,
 .danger-button,
-.text-button {
+.text-button,
+.line-button {
   min-height: 46px;
   border-radius: 8px;
   font-weight: 800;
@@ -306,6 +307,17 @@ button:focus-visible {
   border: 1px solid var(--ink);
   background: var(--paper);
   color: var(--ink);
+}
+
+.line-button {
+  display: grid;
+  place-items: center;
+  padding: 10px 12px;
+  border: 0;
+  background: #06c755;
+  color: #ffffff;
+  text-align: center;
+  text-decoration: none;
 }
 
 .danger-button {
@@ -343,6 +355,23 @@ button:focus-visible {
 .entry-list {
   display: grid;
   gap: 10px;
+}
+
+.line-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.onboarding-card {
+  background: #fffdf8;
+}
+
+.onboarding-card .secondary-button {
+  width: 100%;
 }
 
 .entry-row {
@@ -479,6 +508,10 @@ button:focus-visible {
   .summary-grid,
   .nutrition-grid {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  .line-actions {
+    grid-template-columns: 1fr 1.2fr;
   }
 }
 

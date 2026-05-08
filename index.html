@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#111111">
     <meta name="description" content="7日平均と2週間の傾向で見る、LINEリッチメニュー向け体重管理PWA。">
-    <title>imamu. Weight Log</title>
+    <title>体重コントロールノート | imamu. Weight Log</title>
     <link rel="manifest" href="manifest.webmanifest">
-    <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="assets/icon.svg">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon.svg">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <div class="app-shell">
       <header class="topbar">
         <div>
-          <p class="brand-kicker">imamu. private gym</p>
-          <h1>Weight Log</h1>
+          <p class="brand-kicker">imamu. Weight Log</p>
+          <h1>体重コントロールノート</h1>
         </div>
         <button class="icon-button" type="button" id="installButton" hidden aria-label="ホーム画面に追加">
           <span aria-hidden="true">＋</span>
@@ -28,7 +28,7 @@
           <div>
             <p class="date-label" id="todayLabel"></p>
             <h2>1日ではなく、7日平均で見る。</h2>
-            <p>水分や塩分で動く日々の数字より、2週間の傾向を優先して判断します。</p>
+            <p>毎日の上下に振り回されず、平均値と2週間の傾向でダイエットを調整します。</p>
           </div>
           <div class="trend-badge" id="trendBadge">
             <span>7日平均</span>
@@ -44,6 +44,16 @@
         </nav>
 
         <section class="view active" id="view-record">
+          <section class="card onboarding-card" id="onboardingCard" hidden>
+            <div class="section-heading compact">
+              <div>
+                <h2>最初に設定を整える</h2>
+                <p>まずは初期設定を入力すると、7日平均・目標差・摂取カロリー・PFC目安が表示されます。</p>
+              </div>
+            </div>
+            <button class="secondary-button" type="button" id="openSettingsButton">初期設定を入力する</button>
+          </section>
+
           <form class="card form-card" id="entryForm">
             <div class="section-heading">
               <h2>今日の記録</h2>
@@ -87,10 +97,16 @@
 
           <section class="card">
             <div class="section-heading compact">
-              <h2>直近の記録</h2>
-              <button class="text-button" type="button" id="copyLineButton">LINE報告をコピー</button>
+              <div>
+                <h2>直近の記録</h2>
+                <p>記録をコピーしてLINEで送ると、体重の流れや次の調整をスムーズに相談できます。</p>
+              </div>
             </div>
             <div class="entry-list" id="entryList"></div>
+            <div class="line-actions">
+              <button class="secondary-button" type="button" id="copyLineButton">LINE報告をコピー</button>
+              <a class="line-button" href="https://page.line.me/948sbivq" target="_blank" rel="noopener">この記録をLINEで相談する</a>
+            </div>
           </section>
         </section>
 
@@ -251,7 +267,7 @@
 
           <section class="notice">
             <strong>ご利用前の注意</strong>
-            <p>このアプリは体重管理の記録補助であり、医療診断や治療を目的としたものではありません。妊娠中、治療中、摂食障害の既往がある方、医師から食事制限を受けている方は、医師や専門家に相談してください。</p>
+            <p>このアプリは体重管理の記録補助であり、医療診断や治療、栄養療法を目的としたものではありません。妊娠中、治療中、摂食障害の既往がある方、医師から食事制限を受けている方は、医師や専門家に相談してください。</p>
           </section>
         </section>
       </main>

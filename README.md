@@ -21,6 +21,7 @@ LINE公式アカウントのリッチメニューから開く想定の、スマ�
 - CSVエクスポート
 - データ削除
 - PWA manifestとservice worker
+- PWAアイコンはルート直下の `icon.svg` を参照
 
 ## 保存先
 

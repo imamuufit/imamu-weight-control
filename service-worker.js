@@ -1,11 +1,11 @@
-const CACHE_NAME = "imamu-weight-log-v2";
+const CACHE_NAME = "imamu-weight-log-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
   "./manifest.webmanifest",
-  "./assets/icon.svg"
+  "./icon.svg"
 ];
 
 self.addEventListener("install", (event) => {
